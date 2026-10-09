@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilan Santé & Stress 360° - Philippe Richet</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #0284c7;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --success: #16a34a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .demo-bar {
+            background: #f1f5f9;
+            border: 2px dashed var(--primary-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .demo-bar p {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-light);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .question-card:last-child {
+            border-bottom: none;
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .option-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .option-btn.selected {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        .pill-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .pill-familial { background: #e0e7ff; color: #3730a3; }
+        .pill-personnel { background: #fef3c7; color: #92400e; }
+        .pill-professionnel { background: #dcfce7; color: #166534; }
+
+        .score-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .score-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .score-val {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .alert-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-red {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .alert-orange {
+            background: #fffbe2;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .alert-green {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .hidden { display: none; }
+
+        @media print {
+            .demo-bar, .no-print { display: none !important; }
+            body { padding: 0; background: white; }
+            .card { border: none; box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Bilan Santé & Stress 360°</h1>
+        <p>Évaluation globale : Familial • Personnel • Professionnel</p>
+        <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">Cabinet Philippe Richet / Flyman - Coaching & Formation</p>
+    </header>
+
+    <div class="demo-bar no-print">
+        <p>🚀 Navigation Rapide & Mode Démo</p>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="loadDemoNormal()">⚡ Démo Bilan Équilibré</button>
+            <button class="btn-danger" onclick="loadDemoHarassment()">🚨 Démo Alerte Harcèlement B2B</button>
+            <button class="btn-secondary" onclick="resetForm()">🔄 Réinitialiser</button>
+        </div>
+    </div>
+
+    <div id="step-identity" class="card">
+        <h2 style="margin-bottom: 15px;">1. Fiche d'Identité & Profil</h2>
+        <form id="identity-form" onsubmit="startQuiz(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Nom complet *</label>
+                    <input type="text" id="user-name" required placeholder="Ex: Jean Dupont">
+                </div>
+                <div class="form-group">
+                    <label>Adresse E-mail *</label>
+                    <input type="email" id="user-email" required placeholder="jean.dupont@email.com">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Situation Personnelle</label>
+                    <select id="user-marital">
+                        <option value="En couple / Marié(e)">En couple / Marié(e)</option>
+                        <option value="Célibataire">Célibataire</option>
+                        <option value="Parent solo / Famille monoparentale">Parent solo / Famille monoparentale</option>
+                        <option value="Séparé(e) / Divorcé(e)">Séparé(e) / Divorcé(e)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nombre d'enfants à charge</label>
+                    <select id="user-kids">
+                        <option value="0">Aucun</option>
+                        <option value="1">1 enfant</option>
+                        <option value="2">2 enfants</option>
+                        <option value="3+">3 enfants ou plus</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fonction Professionnelle</label>
+                    <select id="user-role">
+                        <option value="Employé / Agent">Employé / Agent</option>
+                        <option value="Cadre / Manager">Cadre / Manager</option>
+                        <option value="Dirigeant / Entrepreneur">Dirigeant / Entrepreneur</option>
+                        <option value="Indépendant / Profession Libérale">Indépendant / Libéral</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                <div class="form-group">
+                    <label>Ancienneté dans le poste / entreprise</label>
+                    <select id="user-seniority">
+                        <option value="Moins de 2 ans (Phase de découverte / motivation)">Moins de 2 ans</option>
+                        <option value="De 2 à 5 ans">De 2 à 5 ans</option>
+                        <option value="De 5 à 15 ans">De 5 à 15 ans</option>
+                        <option value="Plus de 20 ans (Risque usure / routine / conflits)">Plus de 20 ans</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Contexte Intergénérationnel au travail</label>
+                    <select id="user-generation">
+                        <option value="Équipe homogène">Équipe homogène en âge</option>
+                        <option value="Management de plus jeunes / sénior managé par plus jeune">Management intergénérationnel sensible</option>
+                        <option value="Tensions régulières liées aux écarts d'âge / méthodes">Tensions intergénérationnelles marquées</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 12px;">Commencer le Bilan 360° →</button>
+        </form>
+    </div>
+
+    <div id="step-quiz" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="current-pill" class="pill-tag pill-familial">Partie 1 : Bilan Familial</span>
+            <span id="progress-text" style="font-weight: bold; font-size: 0.9rem;">Question 1 / 150</span>
+        </div>
+        
+        <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+
+        <div id="questions-container"></div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;" class="no-print">
+            <button class="btn-secondary" id="btn-prev" onclick="prevPage()">← Précédent</button>
+            <button class="btn-primary" id="btn-next" onclick="nextPage()">Suivant →</button>
+        </div>
+    </div>
+
+    <div id="step-result" class="card hidden">
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 5px;">Rapport de Bilan Santé & Stress 360°</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;" id="result-user-info"></p>
+
+        <div class="score-box">
+            <div class="score-card">
+                <h3>Sphère Familiale</h3>
+                <div class="score-val" id="score-fam">0%</div>
+                <p id="label-fam" style="font-size: 0.85rem;"></p>
+            </div>
+            <div class="score-card">
+                <h3>Sphère Personnelle</h3>
+                <div class="score-val" id="score-perso">0%</div>
+                <p id="label-perso" style="font-size: 0.85rem;"></p>
+            </div>
+            <div class="score-card">
+                <h3>Sphère Professionnelle</h3>
+                <div class="score-val" id="score-pro">0%</div>
+                <p id="label-pro" style="font-size: 0.85rem;"></p>
+            </div>
+        </div>
+
+        <div id="harassment-alert-box" class="alert-box alert-red hidden">
+            <h3 style="display: flex; align-items: center; gap: 8px;">🚨 ALERTE : Signaux de Toxicités / Harcèlement Professionnel</h3>
+            <p style="margin-top: 8px; font-size: 0.95rem;">
+                Le diagnostic révèle des réponses critiques dans la section professionnelle (pression anormale, isolement, dévalorisation systématique). Un accompagnement d'entreprise ou une médiation RH urgente est recommandé.
+            </p>
+        </div>
+
+        <div style="margin-top: 25px;">
+            <h3 style="border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 15px;">Plan d'Action & Orientations Préconisées</h3>
+            
+            <div id="recommendation-coaching" class="card" style="background: #f0f9ff; border-color: #bae6fd; margin-bottom: 15px;">
+                <h4 style="color: #0369a1; margin-bottom: 5px;">🧘‍♂️ Coaching Mental Individuel (Particulier B2C)</h4>
+                <p id="coaching-text" style="font-size: 0.9rem; color: #334155;"></p>
+            </div>
+
+            <div id="recommendation-pro" class="card" style="background: #f8fafc; border-color: #cbd5e1;">
+                <h4 style="color: #1e293b; margin-bottom: 5px;">🏢 Formations & Ateliers Entreprise (B2B)</h4>
+                <p id="pro-text" style="font-size: 0.9rem; color: #334155;"></p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;" class="no-print">
+            <button class="btn-primary" onclick="window.print()">🖨️ Imprimer / Télécharger en PDF</button>
+            <button class="btn-secondary" onclick="resetForm()" style="margin-left: 10px;">🔄 Recommencer un test</button>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+            <p><strong>Philippe Richet</strong> - Auteur, Formateur Certifié Qualiopi & Coach Mental</p>
+            <p>Contact pro / Demande d'intervention : ph.richetpro@gmail.com</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const questions = [];
+
+// --- PÔLE FAMILIAL (50 questions) ---
+const famTopics = [
+    "J'ai du mal à exprimer mes émotions librement au sein de mon foyer",
+    "Les tensions d'ordre financier créent du stress récurrent dans la famille",
+    "La répartition des tâches ménagères ou logistiques engendre des conflits",
+    "Je me sens dépassé(e) par la gestion et l'éducation de mes enfants au quotidien",
+    "Le manque de communication avec mon/ma partenaire me pèse lourdement",
+    "Je manque de moments de répit ou de calme dans mon environnement familial",
+    "Je dois gérer la dépendance, la maladie ou les soucis d'un proche de ma famille",
+    "J'ai le sentiment d'assumer seul(e) la charge mentale de mon foyer (gestion parent solo / logistique)",
+    "Les désaccords sur les projets de vie créent une distance affective avec mes proches",
+    "Les réunions ou repas de famille élargie sont une source d'anxiété pour moi",
+    "La gestion des enfants malades ou des urgences imprévues perturbe mon équilibre",
+    "Je subis des reproches récurrents de la part de membres de ma famille",
+    "L'organisation avec les gardes d'enfants ou la scolarité est une source de tension",
+    "Je ne parviens pas à concilier vie de famille et impératifs personnels",
+    "Le climat à la maison est souvent tendu ou pesant"
+];
+for(let i=1; i<=50; i++) {
+    questions.push({ id: i, category: 'Familial', text: famTopics[(i-1) % famTopics.length] });
+}
+
+// --- PÔLE PERSONNEL (50 questions avec addictions dissociées) ---
+const persoTopics = [
+    "J'ai des difficultés régulières d'endormissement ou un sommeil non réparateur",
+    "Je ressens des douleurs physiques chroniques (dos, nuque, maux de ventre) liées au stress",
+    "J'ai tendance à ruminer mes pensées négatives tard le soir",
+    "Je consacre très peu de temps à mes loisirs, activités créatives ou sportives",
+    "J'ai une baisse significative d'énergie ou d'enthousiasme au quotidien",
+    "Je me montre excessivement exigeant(e) et autocritique envers moi-même",
+    "J'ai une prise de poids récente ou des troubles alimentaires liés au stress",
+    "Ma consommation de tabac a augmenté ou est devenue difficile à contrôler",
+    "Je consomme de l'alcool régulièrement pour relâcher la pression ou m'endormir",
+    "J'ai recours à des substances ou médicaments pour tenir le coup au quotidien",
+    "Je me sens souvent submergé(e) par la peur de l'échec ou le doute",
+    "J'ai du mal à dire 'non' et à fixer des limites claires aux autres",
+    "Je ressens un sentiment d'isolement ou d'incompréhension autour de moi",
+    "Je n'ai plus d'activités physiques régulières pour évacuer la tension",
+    "Je me sens constamment en état d'alerte ou d'impatience"
+];
+for(let i=51; i<=100; i++) {
+    questions.push({ id: i, category: 'Personnel', text: persoTopics[(i-51) % persoTopics.length] });
+}
+
+// --- PÔLE PROFESSIONNEL (50 questions avec conflits intergénérationnels et harcèlement) ---
+const proTopics = [
+    "Ma charge de travail dépasse régulièrement ma capacité temporelle",
+    "Mes objectifs professionnels manquent de clarté ou sont contradictoires",
+    "Je ne reçois pas la reconnaissance méritée pour mes efforts et résultats",
+    "L'équilibre entre ma vie professionnelle et ma vie personnelle est rompu",
+    "Les interruptions et urgences incessantes m'empêchent de me concentrer",
+    "J'appréhende la reprise du travail après le week-end ou les vacances",
+    "Les outils informatiques et processus internes me causent de la frustration",
+    "Je sens un risque d'épuisement professionnel (burn-out) à moyen terme",
+    "L'organisation dans mon entreprise manque de stabilité et de vision",
+    "Le niveau d'exigence de ma hiérarchie est déconnecté des réalités du terrain",
+    "Je subis des incompréhensions ou des conflits liés aux écarts générationnels au travail",
+    "Les méthodes de management de ma structure me semblent inadaptées",
+    "Je me sens en décalage avec la culture d'entreprise actuelle",
+    "J'ai le sentiment d'être bloqué(e) dans ma fonction depuis de longues années (routine / usure)"
+];
+const harassmentTopics = [
+    "Je subis des remarques désobligeantes, de l'humiliation ou des moqueries répétées",
+    "On me confie volontairement des tâches inutiles ou impossibles à réaliser",
+    "Je me sens sciemment mis(e) à l'écart, isolé(e) ou ignoré(e) par des collègues ou supérieurs",
+    "Mes décisions ou mes travaux sont systématiquement critiqués de façon injustifiée",
+    "Je fais l'objet de rumeurs, d'attaques personnelles ou de propos diffamatoires",
+    "Je subis des pressions morales, du chantage ou des menaces de sanctions injustifiées",
+    "On m'enlève progressivement mes responsabilités sans motif professionnel valable",
+    "Je ressens de l'agressivité ou des hurlements de la part d'un responsable ou collègue",
+    "Je crains pour ma santé mentale directement à cause de l'attitude d'une personne au travail",
+    "Je me sens surveillé(e) ou fliqué(e) à un niveau disproportionné"
+];
+for(let i=101; i<=150; i++) {
+    let text = "";
+    let isHarassment = false;
+    if (i >= 131 && i <= 140) {
+        text = harassmentTopics[i - 131];
+        isHarassment = true;
+    } else {
+        text = proTopics[(i-101) % proTopics.length];
+    }
+    questions.push({ id: i, category: 'Professionnel', text: text, isHarassment: isHarassment });
+}
+
+let userProfile = {};
+let answers = {};
+let currentPage = 0;
+const PAGE_SIZE = 15; // 10 pages de 15 questions
+
+function startQuiz(e) {
+    if (e) e.preventDefault();
+    userProfile = {
+        name: document.getElementById('user-name').value || 'Utilisateur',
+        email: document.getElementById('user-email').value || 'N/A',
+        marital: document.getElementById('user-marital').value,
+        kids: document.getElementById('user-kids').value,
+        role: document.getElementById('user-role').value,
+        seniority: document.getElementById('user-seniority').value,
+        generation: document.getElementById('user-generation').value
+    };
+    document.getElementById('step-identity').classList.add('hidden');
+    document.getElementById('step-quiz').classList.remove('hidden');
+    renderPage();
+}
+
+function renderPage() {
+    const startIdx = currentPage * PAGE_SIZE;
+    const endIdx = Math.min(startIdx + PAGE_SIZE, questions.length);
+    const pageQuestions = questions.slice(startIdx, endIdx);
+
+    const currentCat = pageQuestions[0].category;
+    const pill = document.getElementById('current-pill');
+    pill.textContent = `Partie : Bilan ${currentCat}`;
+    pill.className = `pill-tag pill-${currentCat.toLowerCase()}`;
+
+    document.getElementById('progress-text').textContent = `Questions ${startIdx + 1} à ${endIdx} sur 150`;
+    document.getElementById('progress-fill').style.width = `${((endIdx) / 150) * 100}%`;
+
+    let html = '';
+    pageQuestions.forEach(q => {
+        const val = answers[q.id] !== undefined ? answers[q.id] : -1;
+        html += `
+            <div class="question-card">
+                <div class="question-title">
+                    Q${q.id}. ${q.text} ${q.isHarassment ? '<span style="color:var(--danger); font-size:0.8rem;">[Vigilance Professionnelle]</span>' : ''}
+                </div>
+                <div class="options">
+                    <button type="button" class="option-btn ${val===0?'selected':''}" onclick="setAnswer(${q.id}, 0)">Jamais (0)</button>
+                    <button type="button" class="option-btn ${val===1?'selected':''}" onclick="setAnswer(${q.id}, 1)">Rarement (1)</button>
+                    <button type="button" class="option-btn ${val===2?'selected':''}" onclick="setAnswer(${q.id}, 2)">Souvent (2)</button>
+                    <button type="button" class="option-btn ${val===3?'selected':''}" onclick="setAnswer(${q.id}, 3)">Toujours (3)</button>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('questions-container').innerHTML = html;
+    document.getElementById('btn-prev').style.display = currentPage === 0 ? 'none' : 'block';
+    document.getElementById('btn-next').textContent = endIdx >= 150 ? 'Voir mon Bilan 360° →' : 'Suivant →';
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+}
+
+function setAnswer(qId, val) {
+    answers[qId] = val;
+    renderPage();
+}
+
+function nextPage() {
+    const startIdx = currentPage * PAGE_SIZE;
+    const endIdx = Math.min(startIdx + PAGE_SIZE, questions.length);
+    
+    // Vérifier si toutes les questions de la page sont répondues
+    for(let i = startIdx + 1; i <= endIdx; i++) {
+        if(answers[i] === undefined) {
+            alert(`Veuillez répondre à toutes les questions de cette page avant de continuer (question Q${i} non renseignée).`);
+            return;
+        }
+    }
+
+    if (endIdx < 150) {
+        currentPage++;
+        renderPage();
+    } else {
+        calculateResults();
+    }
+}
+
+function prevPage() {
+    if (currentPage > 0) {
+        currentPage--;
+        renderPage();
+    }
+}
+
+function calculateResults() {
+    let sumFam = 0, sumPerso = 0, sumPro = 0;
+    let harassmentCount = 0;
+
+    for(let i=1; i<=150; i++) {
+        const val = answers[i] || 0;
+        if(i <= 50) sumFam += val;
+        else if(i <= 100) sumPerso += val;
+        else {
+            sumPro += val;
+            if(i >= 131 && i <= 140 && val >= 2) {
+                harassmentCount++;
+            }
+        }
+    }
+
+    // Scores en pourcentage (max 150 points par catégorie -> 50 questions * 3)
+    const scoreFam = Math.round((sumFam / 150) * 100);
+    const scorePerso = Math.round((sumPerso / 150) * 100);
+    const scorePro = Math.round((sumPro / 150) * 100);
+
+    document.getElementById('score-fam').textContent = scoreFam + '%';
+    document.getElementById('score-perso').textContent = scorePerso + '%';
+    document.getElementById('score-pro').textContent = scorePro + '%';
+
+    document.getElementById('label-fam').textContent = getLevelLabel(scoreFam);
+    document.getElementById('label-perso').textContent = getLevelLabel(scorePerso);
+    document.getElementById('label-pro').textContent = getLevelLabel(scorePro);
+
+    document.getElementById('result-user-info').textContent = `${userProfile.name} (${userProfile.email}) • Fonction : ${userProfile.role} • Situation : ${userProfile.marital}, ${userProfile.kids} enfant(s)`;
+
+    // Alerte harcèlement
+    const alertBox = document.getElementById('harassment-alert-box');
+    if (harassmentCount >= 3) {
+        alertBox.classList.remove('hidden');
+    } else {
+        alertBox.classList.add('hidden');
+    }
+
+    // Recommandations ciblées B2C / B2B
+    let coachingMsg = "";
+    if (scoreFam > 40 || scorePerso > 40) {
+        coachingMsg = `Votre bilan met en évidence des zones de tension importantes sur les sphères personnelles et/ou familiales (gestion des contraintes, charge mentale, sommeil ou équilibre de vie). Un accompagnement en **Coaching Mental Individuel (B2C)** avec Philippe Richet est fortement conseillé pour retrouver un ancrage solide, travailler la gestion émotionnelle et restaurer un bien-être durable au quotidien.`;
+    } else {
+        coachingMsg = `Vos sphères personnelles et familiales présentent un bon niveau d'équilibre général. Un suivi de routine ou des sessions de renforcement mental ponctuelles suffisent à maintenir votre dynamique positive.`;
+    }
+    document.getElementById('coaching-text').textContent = coachingMsg;
+
+    let proMsg = "";
+    if (scorePro > 45 || harassmentCount >= 3) {
+        proMsg = `Le diagnostic professionnel révèle une usure, une surcharge ou des frictions prononcées (conflits intergénérationnels, management ou risques de toxicité). Une intervention en entreprise sous forme de **formations sur mesure, ateliers de régulation du stress ou séminaires de cohésion d'équipe (B2B)** est préconisée pour restaurer la qualité de vie au travail (QVT).`;
+    } else {
+        proMsg = `Votre environnement professionnel global est maîtrisé. Des ateliers de prévention ou des formations courtes aux soft skills peuvent néanmoins dynamiser l'engagement sur le long terme.`;
+    }
+    document.getElementById('pro-text').textContent = proMsg;
+
+    document.getElementById('step-quiz').classList.add('hidden');
+    document.getElementById('step-result').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getLevelLabel(score) {
+    if (score < 25) return "✅ Niveau de stress maîtrisé (Équilibré)";
+    if (score < 50) return "⚠️ Stress modéré / Vigilance requise";
+    if (score < 75) return "🔶 Stress élevé / Attention nécessaire";
+    return "🚨 Zone critique / Accompagnement vivement conseillé";
+}
+
+function loadDemoNormal() {
+    document.getElementById('user-name').value = "Marc V. (Démo Équilibré)";
+    document.getElementById('user-email').value = "marc.demo@flyman.fr";
+    for(let i=1; i<=150; i++) {
+        answers[i] = Math.floor(Math.random() * 2); // Scores bas (0 ou 1)
+    }
+    startQuiz();
+    calculateResults();
+}
+
+function loadDemoHarassment() {
+    document.getElementById('user-name').value = "Sophie L. (Démo Alerte B2B)";
+    document.getElementById('user-email').value = "sophie.demo@entreprise.com";
+    for(let i=1; i<=150; i++) {
+        answers[i] = 1;
+    }
+    // Simuler des scores très élevés sur la pro et le harcèlement
+    for(let i=101; i<=150; i++) {
+        answers[i] = 3;
+    }
+    startQuiz();
+    calculateResults();
+}
+
+function resetForm() {
+    answers = {};
+    currentPage = 0;
+    document.getElementById('identity-form').reset();
+    document.getElementById('step-result').classList.add('hidden');
+    document.getElementById('step-quiz').classList.add('hidden');
+    document.getElementById('step-identity').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
+
